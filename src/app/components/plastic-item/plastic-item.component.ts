@@ -9,41 +9,48 @@ import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'app-plastic-item',
-  template: '<canvas #canvas></canvas>',
+  templateUrl: './plastic-item.component.html',
   styles: ['canvas { border: 1px solid #000; }']
-  // styleUrls: ['./plastic-item.component.css']
 })
 export class PlasticItemComponent implements AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasHidden') public canvasHidden: ElementRef;
 
   // setting a width and height for the canvas
   @Input() public width = 400;
   @Input() public height = 400;
 
+
   private cx: CanvasRenderingContext2D;
+  private cxHidden: CanvasRenderingContext2D;
 
   ngAfterViewInit() {
     // get the context
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
 
+    const canvasE2: HTMLCanvasElement = this.canvasHidden.nativeElement;
+    this.cxHidden = canvasE2.getContext('2d');
+
     // set the width and height
     canvasEl.width = this.width;
     canvasEl.height = this.height;
+    canvasE2.width = this.width;
+    canvasE2.height = this.height;
 
     // set some default properties about the line
     this.cx.lineWidth = 1;
     this.cx.lineCap = 'round';
     this.cx.strokeStyle = '#000';
 
-    // we'll implement this method to start capturing mouse events
-    // this.captureEvents(canvasEl);
-    //  this.drawOnCanvas({x:10,y:10},{x:110,y:10});
-    //  this.drawOnCanvas({x:110,y:10},{x:110,y:210});
-    //  this.drawOnCanvas({x:110,y:210},{x:10,y:210});
-    //  this.drawOnCanvas({x:10,y:210},{x:10,y:10});
+    this.cxHidden.lineWidth = 1;
+    this.cxHidden.lineCap = 'round';
+    this.cxHidden.strokeStyle = '#000';
+
     this.pDrowWindow(0, 0);
+    //listening to click
+    this.getClick(canvasEl, canvasE2);
 
   }
 
@@ -56,13 +63,39 @@ export class PlasticItemComponent implements AfterViewInit {
     this.cx.strokeRect(x + pudding, y + pudding, width + (pudding * 3), height + (pudding * 2));
     this.cx.strokeRect(x + pudding * 2, y + pudding * 2, width / 2, height);
     this.cx.strokeRect(x + 100 + (pudding * 3), y + pudding * 2, width / 2, height);
-    this.cx.beginPath();
 
+    this.cxHidden.fillStyle = 'red';
+    this.cxHidden.fillRect(x + pudding * 2, y + pudding * 2, width / 2, height);
+    this.cxHidden.fillStyle = 'green';
+    this.cxHidden.fillRect(x + 100 + (pudding * 3), y + pudding * 2, width / 2, height);
+
+    this.cx.beginPath();
     this.cx.moveTo(width + (pudding * 3), pudding * 2);
     this.cx.lineTo(width / 2 + (pudding * 3), pudding * 2 + height / 2);
     this.cx.lineTo(width + (pudding * 3), pudding * 2 + height);
     this.cx.stroke();
+  }
 
+
+
+  public clearCanvas() {
+    this.cx.clearRect(0, 0, this.width, this.height);
+  }
+  private getClick(canvasEl: HTMLCanvasElement, canvasE2: HTMLCanvasElement) {
+
+    Observable.fromEvent(canvasEl, 'click')
+      .subscribe((res: MouseEvent) => {
+        let data = this.cxHidden.getImageData(res.offsetX, res.offsetY, 1, 1).data;
+        const color = `rgb(${data[0]},${data[1]},${data[2]})`;
+        if (color == 'rgb(255,0,0)') {
+          console.log('left');
+        }
+        if (color == 'rgb(0,128,0)') {
+          console.log('right');
+        }
+
+
+      }
 
 
   }
