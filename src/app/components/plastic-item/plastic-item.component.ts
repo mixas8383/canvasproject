@@ -18,14 +18,25 @@ export class PlasticItemComponent implements AfterViewInit {
   @ViewChild('canvasHidden') public canvasHidden: ElementRef;
 
   // setting a width and height for the canvas
-  @Input() public width = 400;
+  @Input() public width = 800;
   @Input() public height = 400;
 
 
   private cx: CanvasRenderingContext2D;
   private cxHidden: CanvasRenderingContext2D;
+  private windowsCount:number;
+  private wondowsAr: { typeOfDoor: number }[] ;
+  private types: number[]=[0,1,2,3,4,5] ;
+  private doors: number[]=[1,2,3,4,5,6] ;
+
+  
 
   ngAfterViewInit() {
+
+    //init array()
+    
+
+
     // get the context
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
@@ -48,32 +59,85 @@ export class PlasticItemComponent implements AfterViewInit {
     this.cxHidden.lineCap = 'round';
     this.cxHidden.strokeStyle = '#000';
 
-    this.pDrowWindow(0, 0);
+    this.initWindowArray(1);
     //listening to click
     this.getClick(canvasEl, canvasE2);
 
   }
+  public initWindowArray(count:number)
+  {
+    this.wondowsAr = [{typeOfDoor:0}];
+    if(count>1)
+    {
+      for (let i=1;i<count;i++)
+      {
+        this.wondowsAr.push({typeOfDoor:0});
+      }
+    }
+    this.clearCanvas();
+    this.pDrowWindow(0,0);
+  }
 
   public pDrowWindow(x: number, y: number) {
+
+    let doorsCount = this.wondowsAr.length;
+
     let pudding = 10;
+    let doorWidth = 100
     let width = 200;
     let height = 200;
 
 
-    this.cx.strokeRect(x + pudding, y + pudding, width + (pudding * 3), height + (pudding * 2));
-    this.cx.strokeRect(x + pudding * 2, y + pudding * 2, width / 2, height);
-    this.cx.strokeRect(x + 100 + (pudding * 3), y + pudding * 2, width / 2, height);
+    this.cx.strokeRect(x + pudding, y + pudding, doorWidth * doorsCount + (pudding * (doorsCount + 1)), height + (pudding * 2));
 
-    this.cxHidden.fillStyle = 'red';
-    this.cxHidden.fillRect(x + pudding * 2, y + pudding * 2, width / 2, height);
-    this.cxHidden.fillStyle = 'green';
-    this.cxHidden.fillRect(x + 100 + (pudding * 3), y + pudding * 2, width / 2, height);
+    for (let i = 0; i < doorsCount; i++) {
+      this.cx.strokeRect(x + (doorWidth * i) + pudding * (i + 2), y + pudding * 2, doorWidth, height);
+      this.cxHidden.fillStyle = 'rgb(0,0,' + (i + 1) + ')';
+      this.cxHidden.fillRect(x + (doorWidth * i) + pudding * (i + 2), y + pudding * 2, doorWidth, height);
 
-    this.cx.beginPath();
-    this.cx.moveTo(width + (pudding * 3), pudding * 2);
-    this.cx.lineTo(width / 2 + (pudding * 3), pudding * 2 + height / 2);
-    this.cx.lineTo(width + (pudding * 3), pudding * 2 + height);
-    this.cx.stroke();
+      //drow X
+      if (this.wondowsAr[i].typeOfDoor == 0) {
+        this.cx.beginPath();
+        this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 3) - doorWidth / 2),
+          pudding * 2 + height / 2 - pudding);
+        this.cx.lineTo(doorWidth * i + (pudding * (i + 1) + doorWidth / 2)
+          , pudding * 2 + height / 2 + pudding);
+        this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 1) - doorWidth / 2),
+          pudding * 2 + height / 2 - pudding);
+        this.cx.lineTo(doorWidth * i + (pudding * (i + 3) + doorWidth / 2)
+          , pudding * 2 + height / 2 + pudding);
+        this.cx.stroke();
+      }
+
+      //drow left
+      if (this.wondowsAr[i].typeOfDoor == 1 || this.wondowsAr[i].typeOfDoor == 3) {
+        this.cx.beginPath();
+        this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2);
+        this.cx.lineTo(doorWidth * i + (pudding * (i + 2)), pudding * 2 + height / 2);
+        this.cx.lineTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2 + height);
+        this.cx.stroke();
+      }
+
+      if (this.wondowsAr[i].typeOfDoor == 2 || this.wondowsAr[i].typeOfDoor == 3 || this.wondowsAr[i].typeOfDoor == 5) {
+        this.cx.beginPath();
+        this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2 + height);
+        this.cx.lineTo(doorWidth * i + (pudding * (i + 2)) + doorWidth / 2, pudding * 2);
+        this.cx.lineTo(doorWidth * (i) + (pudding * (i + 2)), pudding * 2 + height);
+        this.cx.stroke();
+      }
+
+      if (this.wondowsAr[i].typeOfDoor == 4 || this.wondowsAr[i].typeOfDoor == 5) {
+        this.cx.beginPath();
+        this.cx.moveTo(doorWidth * (i) + (pudding * (i + 2)), pudding * 2);
+        this.cx.lineTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2 + height / 2);
+        this.cx.lineTo(doorWidth * (i) + (pudding * (i + 2)), pudding * 2 + height);
+        this.cx.stroke();
+      }
+
+
+    }
+
+
   }
 
 
@@ -87,15 +151,18 @@ export class PlasticItemComponent implements AfterViewInit {
       .subscribe((res: MouseEvent) => {
         let data = this.cxHidden.getImageData(res.offsetX, res.offsetY, 1, 1).data;
         const color = `rgb(${data[0]},${data[1]},${data[2]})`;
-        if (color == 'rgb(255,0,0)') {
-          console.log('left');
-        }
-        if (color == 'rgb(0,128,0)') {
-          console.log('right');
+        console.log(data[2])
+        if (data[2] > 0 && this.wondowsAr[data[2] - 1]) {
+          this.wondowsAr[data[2] - 1].typeOfDoor++;
+          if(this.wondowsAr[data[2] - 1].typeOfDoor >5)
+          {
+            this.wondowsAr[data[2] - 1].typeOfDoor=0;
+          }
+          this.clearCanvas();
+          this.pDrowWindow(0, 0);
         }
 
-
-      }
+      })
 
 
   }
