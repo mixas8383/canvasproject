@@ -1,5 +1,7 @@
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { ComponentFactoryResolver } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { LdbService } from '../../services/ldb.service';
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
@@ -22,20 +24,40 @@ export class PlasticItemComponent implements AfterViewInit {
   @Input() public height = 400;
 
 
+
   private cx: CanvasRenderingContext2D;
   private cxHidden: CanvasRenderingContext2D;
-  private windowsCount:number;
-  private wondowsAr: { typeOfDoor: number }[] ;
-  private types: number[]=[0,1,2,3,4,5] ;
-  private doors: number[]=[1,2,3,4,5,6] ;
+  private windowsCount: number;
+  private wondowsAr: { typeOfDoor: number }[];
+  private types: number[] = [0, 1, 2, 3, 4, 5];
+  private doors: number[] = [1, 2, 3, 4, 5, 6];
+  private config: object;
+  public canShow: boolean=false;
+  constructor(
+    private ldbService: LdbService
+  ) {
 
-  
+    
+  }
+  ngOnInit(){
+    this.ldbService.getConfig().then((data) => {
+      console.log(data)
+      this.config=data;
+      this.canShow=true;
+    });
+ 
+  }
+
 
   ngAfterViewInit() {
 
-    //init array()
-    
+    this.initApp();
 
+  } 
+  public  initApp() {
+    //init array()
+
+    console.log('view')
 
     // get the context
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -62,20 +84,16 @@ export class PlasticItemComponent implements AfterViewInit {
     this.initWindowArray(1);
     //listening to click
     this.getClick(canvasEl, canvasE2);
-
   }
-  public initWindowArray(count:number)
-  {
-    this.wondowsAr = [{typeOfDoor:0}];
-    if(count>1)
-    {
-      for (let i=1;i<count;i++)
-      {
-        this.wondowsAr.push({typeOfDoor:0});
+  public initWindowArray(count: number) {
+    this.wondowsAr = [{ typeOfDoor: 0 }];
+    if (count > 1) {
+      for (let i = 1; i < count; i++) {
+        this.wondowsAr.push({ typeOfDoor: 0 });
       }
     }
     this.clearCanvas();
-    this.pDrowWindow(0,0);
+    this.pDrowWindow(0, 0);
   }
 
   public pDrowWindow(x: number, y: number) {
@@ -154,9 +172,8 @@ export class PlasticItemComponent implements AfterViewInit {
         console.log(data[2])
         if (data[2] > 0 && this.wondowsAr[data[2] - 1]) {
           this.wondowsAr[data[2] - 1].typeOfDoor++;
-          if(this.wondowsAr[data[2] - 1].typeOfDoor >5)
-          {
-            this.wondowsAr[data[2] - 1].typeOfDoor=0;
+          if (this.wondowsAr[data[2] - 1].typeOfDoor > 5) {
+            this.wondowsAr[data[2] - 1].typeOfDoor = 0;
           }
           this.clearCanvas();
           this.pDrowWindow(0, 0);

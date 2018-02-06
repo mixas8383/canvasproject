@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { PlasticComponent } from './components/plastic/plastic.component';
 import { PlasticItemComponent } from './components/plastic-item/plastic-item.component';
+import {LdbService} from './services/ldb.service';
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import { PlasticItemComponent } from './components/plastic-item/plastic-item.com
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [LdbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
