@@ -1,7 +1,10 @@
+import { itemres } from './../../classes/itemres';
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ComponentFactoryResolver } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { LdbService } from '../../services/ldb.service';
+
+
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
@@ -32,20 +35,20 @@ export class PlasticItemComponent implements AfterViewInit {
   private types: number[] = [0, 1, 2, 3, 4, 5];
   private doors: number[] = [1, 2, 3, 4, 5, 6];
   private config: object;
-  public canShow: boolean=false;
+  public canShow: boolean = false;
   constructor(
     private ldbService: LdbService
   ) {
 
-    
+
   }
-  ngOnInit(){
+  ngOnInit() {
     this.ldbService.getConfig().then((data) => {
-      console.log(data)
-      this.config=data;
-      this.canShow=true;
+      //  console.log(data)
+      this.config = data;
+      this.canShow = true;
     });
- 
+
   }
 
 
@@ -53,11 +56,11 @@ export class PlasticItemComponent implements AfterViewInit {
 
     this.initApp();
 
-  } 
-  public  initApp() {
+  }
+  public initApp() {
     //init array()
 
-    console.log('view')
+    //console.log('view')
 
     // get the context
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -169,7 +172,7 @@ export class PlasticItemComponent implements AfterViewInit {
       .subscribe((res: MouseEvent) => {
         let data = this.cxHidden.getImageData(res.offsetX, res.offsetY, 1, 1).data;
         const color = `rgb(${data[0]},${data[1]},${data[2]})`;
-        console.log(data[2])
+        //    console.log(data[2])
         if (data[2] > 0 && this.wondowsAr[data[2] - 1]) {
           this.wondowsAr[data[2] - 1].typeOfDoor++;
           if (this.wondowsAr[data[2] - 1].typeOfDoor > 5) {
@@ -242,6 +245,22 @@ export class PlasticItemComponent implements AfterViewInit {
       // strokes the current path with the styles we set earlier
       this.cx.stroke();
     }
+  }
+  recountObjects(event) {
+    let res = new itemres;
+
+    if (this.wondowsAr.length > 0) {
+      for (let i in this.wondowsAr) {
+        let item = this.wondowsAr[i];
+        if (item.typeOfDoor == 0) {
+          res.emptyDoorsCount++
+        }else{
+          res.doorsCount++
+        }
+      }
+    }
+
+    console.log(res);
   }
 
 }

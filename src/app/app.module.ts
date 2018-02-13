@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { PlasticComponent } from './components/plastic/plastic.component';
 import { PlasticItemComponent } from './components/plastic-item/plastic-item.component';
 import {LdbService} from './services/ldb.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MzButtonModule, MzInputModule,MzSelectModule } from 'ng2-materialize';
 
 
 @NgModule({
@@ -15,7 +17,12 @@ import {LdbService} from './services/ldb.service';
     PlasticItemComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    MzButtonModule,
+    MzInputModule,
+    MzSelectModule,
   ],
   providers: [LdbService],
   bootstrap: [AppComponent]
