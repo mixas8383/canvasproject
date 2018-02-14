@@ -19,7 +19,7 @@
     </mz-select-container>
     <mz-input-container class="col s2 m2">
 
-      <input mz-input [label]="'Total Width'" [validate]="false" [dataError]="'Email is invalid'" [dataSuccess]="'Email is valid'"
+      <input mz-input [(ngModel)]="totalWidth" [label]="'Total Width'" [validate]="false" [dataError]="'Email is invalid'" [dataSuccess]="'Email is valid'"
         placeholder="Enter Total width" type="number">
     </mz-input-container>
     <mz-select-container class="col s2 m2" *ngIf="config">

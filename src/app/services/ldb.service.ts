@@ -22,6 +22,7 @@ export class LdbService {
           width: 50,
           windowPaddingTop: 10,
           windowPaddingSide: 10
+
         }],
         doorProfile: [{
           id: 1,
@@ -29,7 +30,9 @@ export class LdbService {
           length: 6500,
           width: 50,
           windowPaddingTop: 10,
-          windowPaddingSide: 10
+          windowPaddingSide: 10,
+          doorTopMargin: 10,
+          doorSideMargin: 10
         }]
       });
 

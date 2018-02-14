@@ -34,19 +34,20 @@ export class PlasticItemComponent implements AfterViewInit {
   private windowsCount: number;
 
   public selected: {
-    selectedOutsideProfiles: {},
-    selectedPartitionProfile: {},
-    selectedDoorProfile: {}
+    selectedOutsideProfiles: any,
+    selectedPartitionProfile:any,
+    selectedDoorProfile: any
   } = {
       selectedOutsideProfiles: null,
       selectedPartitionProfile: null,
       selectedDoorProfile: null
     };
 
-  private wondowsAr: { typeOfDoor: number }[];
+  private windowsAr: { typeOfDoor: number }[];
   private types: number[] = [0, 1, 2, 3, 4, 5];
   private doors: number[] = [1, 2, 3, 4, 5, 6];
   private config: object;
+  private totalWidth: number;
   public canShow: boolean = false;
   constructor(
     private ldbService: LdbService
@@ -103,10 +104,10 @@ export class PlasticItemComponent implements AfterViewInit {
     this.getClick(canvasEl, canvasE2);
   }
   public initWindowArray(count: number) {
-    this.wondowsAr = [{ typeOfDoor: 0 }];
+    this.windowsAr = [{ typeOfDoor: 0 }];
     if (count > 1) {
       for (let i = 1; i < count; i++) {
-        this.wondowsAr.push({ typeOfDoor: 0 });
+        this.windowsAr.push({ typeOfDoor: 0 });
       }
     }
     this.clearCanvas();
@@ -115,7 +116,7 @@ export class PlasticItemComponent implements AfterViewInit {
 
   public pDrowWindow(x: number, y: number) {
 
-    let doorsCount = this.wondowsAr.length;
+    let doorsCount = this.windowsAr.length;
 
     let pudding = 10;
     let doorWidth = 100
@@ -131,7 +132,7 @@ export class PlasticItemComponent implements AfterViewInit {
       this.cxHidden.fillRect(x + (doorWidth * i) + pudding * (i + 2), y + pudding * 2, doorWidth, height);
 
       //drow X
-      if (this.wondowsAr[i].typeOfDoor == 0) {
+      if (this.windowsAr[i].typeOfDoor == 0) {
         this.cx.beginPath();
         this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 3) - doorWidth / 2),
           pudding * 2 + height / 2 - pudding);
@@ -145,7 +146,7 @@ export class PlasticItemComponent implements AfterViewInit {
       }
 
       //drow left
-      if (this.wondowsAr[i].typeOfDoor == 1 || this.wondowsAr[i].typeOfDoor == 3) {
+      if (this.windowsAr[i].typeOfDoor == 1 || this.windowsAr[i].typeOfDoor == 3) {
         this.cx.beginPath();
         this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2);
         this.cx.lineTo(doorWidth * i + (pudding * (i + 2)), pudding * 2 + height / 2);
@@ -153,7 +154,7 @@ export class PlasticItemComponent implements AfterViewInit {
         this.cx.stroke();
       }
 
-      if (this.wondowsAr[i].typeOfDoor == 2 || this.wondowsAr[i].typeOfDoor == 3 || this.wondowsAr[i].typeOfDoor == 5) {
+      if (this.windowsAr[i].typeOfDoor == 2 || this.windowsAr[i].typeOfDoor == 3 || this.windowsAr[i].typeOfDoor == 5) {
         this.cx.beginPath();
         this.cx.moveTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2 + height);
         this.cx.lineTo(doorWidth * i + (pudding * (i + 2)) + doorWidth / 2, pudding * 2);
@@ -161,7 +162,7 @@ export class PlasticItemComponent implements AfterViewInit {
         this.cx.stroke();
       }
 
-      if (this.wondowsAr[i].typeOfDoor == 4 || this.wondowsAr[i].typeOfDoor == 5) {
+      if (this.windowsAr[i].typeOfDoor == 4 || this.windowsAr[i].typeOfDoor == 5) {
         this.cx.beginPath();
         this.cx.moveTo(doorWidth * (i) + (pudding * (i + 2)), pudding * 2);
         this.cx.lineTo(doorWidth * (i + 1) + (pudding * (i + 2)), pudding * 2 + height / 2);
@@ -187,10 +188,10 @@ export class PlasticItemComponent implements AfterViewInit {
         let data = this.cxHidden.getImageData(res.offsetX, res.offsetY, 1, 1).data;
         const color = `rgb(${data[0]},${data[1]},${data[2]})`;
         //    console.log(data[2])
-        if (data[2] > 0 && this.wondowsAr[data[2] - 1]) {
-          this.wondowsAr[data[2] - 1].typeOfDoor++;
-          if (this.wondowsAr[data[2] - 1].typeOfDoor > 5) {
-            this.wondowsAr[data[2] - 1].typeOfDoor = 0;
+        if (data[2] > 0 && this.windowsAr[data[2] - 1]) {
+          this.windowsAr[data[2] - 1].typeOfDoor++;
+          if (this.windowsAr[data[2] - 1].typeOfDoor > 5) {
+            this.windowsAr[data[2] - 1].typeOfDoor = 0;
           }
           this.clearCanvas();
           this.pDrowWindow(0, 0);
@@ -262,10 +263,10 @@ export class PlasticItemComponent implements AfterViewInit {
   }
   recountObjects(event) {
     let res = new itemres;
-console.log(this.selected)
-    if (this.wondowsAr.length > 0) {
-      for (let i in this.wondowsAr) {
-        let item = this.wondowsAr[i];
+    console.log(this.selected)
+    if (this.windowsAr.length > 0) {
+      for (let i in this.windowsAr) {
+        let item = this.windowsAr[i];
         if (item.typeOfDoor == 0) {
           res.emptyDoorsCount++
         } else {
@@ -273,6 +274,22 @@ console.log(this.selected)
         }
       }
     }
+
+    console.log(this.selected.selectedOutsideProfiles.width * 2)
+    console.log((this.windowsAr.length - 1) * this.selected.selectedPartitionProfile.width)
+    console.log(res.emptyDoorsCount * this.selected.selectedOutsideProfiles.windowPaddingSide * 2)
+
+    let windowglass =
+      this.totalWidth -
+      (this.selected.selectedOutsideProfiles.width * 2 +
+        ((this.windowsAr.length - 1) * this.selected.selectedPartitionProfile.width) +
+        (res.emptyDoorsCount * this.selected.selectedOutsideProfiles.windowPaddingSide * 2) +
+        (res.doorsCount * 2 * (this.selected.selectedDoorProfile.width - this.selected.selectedDoorProfile.doorSideMargin + this.selected.selectedDoorProfile.windowPaddingSide))
+      );
+    
+      let oneGlassWindow =Math.round(windowglass/this.windowsAr.length);
+
+console.log(oneGlassWindow); 
 
     console.log(res);
   }
