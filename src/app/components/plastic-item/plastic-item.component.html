@@ -2,12 +2,16 @@
 
 
   <div class="row">
-    <div class="col s8 m8">
-      <canvas #canvas width="200" height="200"></canvas>
+    <div #canvasWrapper class="col s12 m12">
+      <canvas #canvas></canvas>
     </div>
     <div style="display:none">
       <canvas #canvasHidden></canvas>
     </div>
+
+  </div>
+  <div class="row">
+
     <mz-select-container class="col s2 m2">
       <select mz-select [(ngModel)]="windowsCount" (change)="initWindowArray($event.target.value)" [label]="'Windows'" [placeholder]="'Select count'">
         <option *ngFor="let i of doors">{{i}}</option>
@@ -16,10 +20,35 @@
     <mz-input-container class="col s2 m2">
 
       <input mz-input [label]="'Total Width'" [validate]="false" [dataError]="'Email is invalid'" [dataSuccess]="'Email is valid'"
-        placeholder="Enter Total width"  type="number" (change)="recountObjects($event)">
+        placeholder="Enter Total width" type="number">
     </mz-input-container>
+    <mz-select-container class="col s2 m2" *ngIf="config">
+      <select mz-select [(ngModel)]="selected.selectedOutsideProfiles" [label]="'Main profile'" [placeholder]="'Select Profile'">
+        <option [ngValue]="i" *ngFor="let i of config.outsideProfiles">{{i.title}}</option>
+      </select>
+    </mz-select-container>
+    <mz-select-container class="col s2 m2" *ngIf="config">
+      <select mz-select [(ngModel)]="selected.selectedPartitionProfile" [label]="'Partition profile'" [placeholder]="'Select Profile'">
+        <option  [ngValue]="i" *ngFor="let i of config.partitionProfile">{{i.title}}</option>
+      </select>
+    </mz-select-container>
+    <mz-select-container class="col s2 m2" *ngIf="config">
+      <select mz-select [(ngModel)]="selected.selectedDoorProfile" [label]="'Door profile'" [placeholder]="'Select Profile'">
+        <option  [ngValue]="i" *ngFor="let i of config.doorProfile">{{i.title}}</option>
+      </select>
+    </mz-select-container>
 
   </div>
+  <div class="row">
+    <div class="col s10 m10">
+    </div>
+    <div class="col s2 m2">
+      <button mz-button  (click)="recountObjects($event)">
+        button
+      </button>
+    </div>
+  </div>
+
   <!-- <button (click)="clearCanvas()">Clear</button> -->
   <!-- <button (click)="pDrowWindow(0,0)">drow</button> -->
 </div>

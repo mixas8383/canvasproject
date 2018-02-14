@@ -20,17 +20,29 @@ import 'rxjs/add/operator/switchMap';
 export class PlasticItemComponent implements AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasWrapper') public canvasWrapper: ElementRef;
   @ViewChild('canvasHidden') public canvasHidden: ElementRef;
 
   // setting a width and height for the canvas
   @Input() public width = 800;
-  @Input() public height = 400;
+  @Input() public height = 250;
 
 
 
   private cx: CanvasRenderingContext2D;
   private cxHidden: CanvasRenderingContext2D;
   private windowsCount: number;
+
+  public selected: {
+    selectedOutsideProfiles: {},
+    selectedPartitionProfile: {},
+    selectedDoorProfile: {}
+  } = {
+      selectedOutsideProfiles: null,
+      selectedPartitionProfile: null,
+      selectedDoorProfile: null
+    };
+
   private wondowsAr: { typeOfDoor: number }[];
   private types: number[] = [0, 1, 2, 3, 4, 5];
   private doors: number[] = [1, 2, 3, 4, 5, 6];
@@ -43,8 +55,10 @@ export class PlasticItemComponent implements AfterViewInit {
 
   }
   ngOnInit() {
+    this.width = this.canvasWrapper.nativeElement.clientWidth - 30;
+
     this.ldbService.getConfig().then((data) => {
-      //  console.log(data)
+      // console.log();
       this.config = data;
       this.canShow = true;
     });
@@ -248,13 +262,13 @@ export class PlasticItemComponent implements AfterViewInit {
   }
   recountObjects(event) {
     let res = new itemres;
-
+console.log(this.selected)
     if (this.wondowsAr.length > 0) {
       for (let i in this.wondowsAr) {
         let item = this.wondowsAr[i];
         if (item.typeOfDoor == 0) {
           res.emptyDoorsCount++
-        }else{
+        } else {
           res.doorsCount++
         }
       }
