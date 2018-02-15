@@ -1,4 +1,5 @@
 import { itemres } from './../../classes/itemres';
+import { doorOb } from './../../classes/door';
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { ComponentFactoryResolver } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -35,7 +36,7 @@ export class PlasticItemComponent implements AfterViewInit {
 
   public selected: {
     selectedOutsideProfiles: any,
-    selectedPartitionProfile:any,
+    selectedPartitionProfile: any,
     selectedDoorProfile: any
   } = {
       selectedOutsideProfiles: null,
@@ -43,12 +44,17 @@ export class PlasticItemComponent implements AfterViewInit {
       selectedDoorProfile: null
     };
 
-  private windowsAr: { typeOfDoor: number }[];
+  private windowsAr: doorOb[];
   private types: number[] = [0, 1, 2, 3, 4, 5];
   private doors: number[] = [1, 2, 3, 4, 5, 6];
   private config: object;
   private totalWidth: number;
-  public canShow: boolean = false;
+  private totalHeight: number;
+  private canShowDiagram: boolean = false;
+  private proportialWidth: boolean = true;
+
+
+
   constructor(
     private ldbService: LdbService
   ) {
@@ -61,7 +67,6 @@ export class PlasticItemComponent implements AfterViewInit {
     this.ldbService.getConfig().then((data) => {
       // console.log();
       this.config = data;
-      this.canShow = true;
     });
 
   }
@@ -104,10 +109,10 @@ export class PlasticItemComponent implements AfterViewInit {
     this.getClick(canvasEl, canvasE2);
   }
   public initWindowArray(count: number) {
-    this.windowsAr = [{ typeOfDoor: 0 }];
+    this.windowsAr = [new doorOb];
     if (count > 1) {
       for (let i = 1; i < count; i++) {
-        this.windowsAr.push({ typeOfDoor: 0 });
+        this.windowsAr.push(new doorOb);
       }
     }
     this.clearCanvas();
@@ -278,6 +283,7 @@ export class PlasticItemComponent implements AfterViewInit {
     console.log(this.selected.selectedOutsideProfiles.width * 2)
     console.log((this.windowsAr.length - 1) * this.selected.selectedPartitionProfile.width)
     console.log(res.emptyDoorsCount * this.selected.selectedOutsideProfiles.windowPaddingSide * 2)
+    console.log(res.doorsCount * 2 * (this.selected.selectedDoorProfile.width - this.selected.selectedDoorProfile.doorSideMargin + this.selected.selectedDoorProfile.windowPaddingSide))
 
     let windowglass =
       this.totalWidth -
@@ -286,12 +292,107 @@ export class PlasticItemComponent implements AfterViewInit {
         (res.emptyDoorsCount * this.selected.selectedOutsideProfiles.windowPaddingSide * 2) +
         (res.doorsCount * 2 * (this.selected.selectedDoorProfile.width - this.selected.selectedDoorProfile.doorSideMargin + this.selected.selectedDoorProfile.windowPaddingSide))
       );
-    
-      let oneGlassWindow =Math.round(windowglass/this.windowsAr.length);
 
-console.log(oneGlassWindow); 
+    let oneGlassWindow = Math.round(windowglass / this.windowsAr.length);
 
-    console.log(res);
+
+    console.log(oneGlassWindow);
+
+    for (let i in this.windowsAr) {
+      let item = this.windowsAr[i];
+      item.glassWidth = oneGlassWindow;
+
+    }
+
+    this.windowWidthCount();
+
+    console.log(this.windowsAr);
+
   }
+
+
+
+
+  windowWidthCount() {
+    let tWidth = 0;
+
+    for (let i in this.windowsAr) {
+      let item = this.windowsAr[i];
+      let canContinue = true;
+      if (parseInt(i) == 0) {
+        //first element
+        if (item.typeOfDoor == 0) {
+          //emptyDoor
+          item.markLenght = this.selected.selectedOutsideProfiles.width +
+            this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+            item.glassWidth +
+            this.selected.selectedPartitionProfile.width / 2 /* this is main differens */
+        } else {
+          //doorType 1-6
+          item.markLenght = this.selected.selectedOutsideProfiles.width +
+            this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+            item.glassWidth +
+            this.selected.selectedPartitionProfile.width / 2 +/* this is main differens */
+            this.selected.selectedDoorProfile.width * 2 - this.selected.selectedDoorProfile.doorSideMargin * 2
+            
+        }
+        item.factorialLenght = item.markLenght*1;
+
+        if (this.windowsAr.length == 1) {
+          canContinue = false;
+        }
+
+
+
+      } else
+        if ((parseInt(i) + 1) == this.windowsAr.length && canContinue) {
+          //last element
+
+          let previous = this.windowsAr[parseInt(i) - 1];
+          let startCount = previous.markLenght + this.selected.selectedPartitionProfile.width / 2
+
+          if (item.typeOfDoor == 0) {
+            //emptyDoor
+            item.markLenght = startCount +
+              this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+              item.glassWidth +
+              this.selected.selectedOutsideProfiles.width /* this is main differens */
+          } else {
+            //doorType 1-6
+            item.markLenght = startCount +
+              this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+              item.glassWidth +
+              this.selected.selectedOutsideProfiles.width + /* this is main differens */
+              this.selected.selectedDoorProfile.width * 2 - this.selected.selectedDoorProfile.doorSideMargin * 2
+          }
+          item.factorialLenght = item.markLenght-previous.markLenght;
+        } else if (canContinue) {
+
+          let previous = this.windowsAr[parseInt(i) - 1];
+          let startCount = previous.markLenght + this.selected.selectedPartitionProfile.width / 2
+
+          if (item.typeOfDoor == 0) {
+            //emptyDoor
+            item.markLenght = startCount +
+              this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+              item.glassWidth +
+              this.selected.selectedPartitionProfile.width / 2 /* this is main differens */
+          } else {
+            //doorType 1-6
+            item.markLenght = startCount +
+              this.selected.selectedOutsideProfiles.windowPaddingSide * 2 +
+              item.glassWidth +
+              this.selected.selectedPartitionProfile.width / 2 + /* this is main differens */
+              this.selected.selectedDoorProfile.width * 2 - this.selected.selectedDoorProfile.doorSideMargin * 2
+          }
+          item.factorialLenght = item.markLenght-previous.markLenght;
+
+        }
+
+    }
+    this.canShowDiagram = true;
+  }
+
+
 
 }

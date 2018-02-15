@@ -7,7 +7,7 @@ import { PlasticComponent } from './components/plastic/plastic.component';
 import { PlasticItemComponent } from './components/plastic-item/plastic-item.component';
 import {LdbService} from './services/ldb.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MzButtonModule, MzInputModule,MzSelectModule } from 'ng2-materialize';
+import { MzButtonModule, MzInputModule,MzSelectModule,MzSwitchModule  } from 'ng2-materialize';
 
 
 @NgModule({
@@ -23,6 +23,7 @@ import { MzButtonModule, MzInputModule,MzSelectModule } from 'ng2-materialize';
     MzButtonModule,
     MzInputModule,
     MzSelectModule,
+    MzSwitchModule ,
   ],
   providers: [LdbService],
   bootstrap: [AppComponent]

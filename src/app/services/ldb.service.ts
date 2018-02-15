@@ -12,16 +12,16 @@ export class LdbService {
           title: 'First profile title',
           length: 6500,
           width: 50,
-          windowPaddingTop: 10,
-          windowPaddingSide: 10
+          windowPaddingTop: 5,
+          windowPaddingSide: 5
         }],
         partitionProfile: [{
           id: 1,
           title: 'First partition title',
           length: 6500,
           width: 50,
-          windowPaddingTop: 10,
-          windowPaddingSide: 10
+          windowPaddingTop: 5,
+          windowPaddingSide: 5
 
         }],
         doorProfile: [{
@@ -29,8 +29,8 @@ export class LdbService {
           title: 'First door title',
           length: 6500,
           width: 50,
-          windowPaddingTop: 10,
-          windowPaddingSide: 10,
+          windowPaddingTop: 5,
+          windowPaddingSide: 5,
           doorTopMargin: 10,
           doorSideMargin: 10
         }]
