@@ -9,12 +9,15 @@ import { AppComponent } from './app.component';
 import { PlasticItemComponent } from './components/plastic-item/plastic-item.component';
 import { LdbService } from './services/ldb.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ClarityModule } from "clarity-angular";
 
 import { AppRoutingModule } from "./routing.module";
 import { PlasticComponent } from "./components/plastic/plastic.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
+
+import { DxButtonModule, DxNavBarModule, DxSlideOutModule, DxToolbarModule, DxSwitchModule, DxTemplateModule, DxMenuModule, DxSelectBoxModule, DxCheckBoxModule } from 'devextreme-angular';
+
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -25,16 +28,23 @@ export function HttpLoaderFactory(http: HttpClient) {
     PlasticComponent,
     PlasticItemComponent,
     SettingsComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
-
+    DxButtonModule,
+    DxNavBarModule,
+    DxSlideOutModule,
+    DxToolbarModule,
+    DxSwitchModule,
+    DxTemplateModule,
+    DxMenuModule,
+    DxSelectBoxModule,
+    DxCheckBoxModule,
     BrowserAnimationsModule,
     AppRoutingModule,
 
     FormsModule,
-    ClarityModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {

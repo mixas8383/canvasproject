@@ -1,44 +1,99 @@
-<clr-main-container>
+<!-- <clr-main-container>
     <clr-header class="header-3">
-      <div class="branding">
-        <a href="/" class="nav-link">
-          <span class="title">Win</span>
-        </a>
-      </div>
-      <div class="header-actions">
-        <clr-dropdown>
-          <button class="nav-icon" clrDropdownTrigger>
-            <clr-icon shape="world"></clr-icon>
-            <clr-icon shape="caret down"></clr-icon>
-          </button>
-          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-            <a *ngFor="let lang of translate.getLangs()" (click)="translate.use(lang)" clrDropdownItem>{{lang}}</a>
-          </clr-dropdown-menu>
-        </clr-dropdown>
-        <clr-dropdown>
-          <button class="nav-icon" clrDropdownTrigger>
-            <clr-icon shape="user"></clr-icon>
-            <clr-icon shape="caret down"></clr-icon>
-          </button>
-          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-            <a href="..." clrDropdownItem>{{ 'profile' | translate }}</a>
-            <a href="..." clrDropdownItem>{{ 'logout' | translate }}</a>
-          </clr-dropdown-menu>
-        </clr-dropdown>
-      </div>
+        <div class="branding">
+            <a href="/" class="nav-link">
+                <span class="title">Win</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <clr-dropdown>
+                <button class="nav-icon" clrDropdownTrigger>
+                    <clr-icon shape="world"></clr-icon>
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <a *ngFor="let lang of translate.getLangs()" (click)="translate.use(lang)" clrDropdownItem>{{lang}}</a>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+            <clr-dropdown>
+                <button class="nav-icon" clrDropdownTrigger>
+                    <clr-icon shape="user"></clr-icon>
+                    <clr-icon shape="caret down"></clr-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <a href="..." clrDropdownItem>{{ 'profile' | translate }}</a>
+                    <a href="..." clrDropdownItem>{{ 'logout' | translate }}</a>
+                </clr-dropdown-menu>
+            </clr-dropdown>
+        </div>
     </clr-header>
     <div class="alert alert-app-level"></div>
     <div class="content-container">
-      <div class="content-area">
-        <router-outlet></router-outlet>
-      </div>
-      <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clr-nav-level]="1">
-        <a clrVerticalNavLink routerLink="/dashboard" routerLinkActive="active" class="nav-link">
-          <clr-icon clrVerticalNavIcon shape="dashboard"></clr-icon>{{ 'dashboard' | translate }}
-        </a>
-        <a clrVerticalNavLink routerLink="/settings" routerLinkActive="active" class="nav-link">
-          <clr-icon clrVerticalNavIcon shape="cog"></clr-icon>{{ 'settings' | translate }}
-        </a>
-      </clr-vertical-nav>
+        <div class="content-area">
+            <router-outlet></router-outlet>
+        </div>
+        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clr-nav-level]="1">
+            <a clrVerticalNavLink routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+                <clr-icon clrVerticalNavIcon shape="dashboard"></clr-icon>{{ 'dashboard' | translate }}
+            </a>
+            <a clrVerticalNavLink routerLink="/settings" routerLinkActive="active" class="nav-link">
+                <clr-icon clrVerticalNavIcon shape="cog"></clr-icon>{{ 'settings' | translate }}
+            </a>
+        </clr-vertical-nav>
     </div>
-  </clr-main-container>
+</clr-main-container> -->
+<div class="form">
+        <div>
+            <div class="label">Catalog:</div>
+            <dx-menu
+                #menu
+                [dataSource]="products"
+                displayExpr="name"
+                [showFirstSubmenuMode]="showFirstSubmenuModes"
+                orientation="horizontal"
+                submenuDirection="auto"
+                [hideSubmenuOnMouseLeave]="false"
+                (onItemClick)="itemClick($event)"
+            >
+            </dx-menu>
+            <div id="product-details" *ngIf="currentProduct">
+                <img src="{{currentProduct.iconSrc}}" />
+                <div class="name">{{currentProduct.name}}</div>
+                <div class="price">{{"$" + currentProduct.price}}</div>
+            </div>
+        </div>
+        <div class="options">
+            <div class="caption">Options</div>
+            <div class="option">
+                <div>Show First Submenu Mode</div>
+                <dx-select-box
+                    [items]="showSubmenuModes"
+                    displayExpr="name"
+                    [(value)]="showFirstSubmenuModes"
+                ></dx-select-box>
+            </div>
+            <div class="option">
+                <div>Orientation</div>
+                <dx-select-box
+                    [items]="['horizontal', 'vertical']"
+                    [(value)]="menu.orientation"
+                ></dx-select-box>
+            </div>
+            <div class="option">
+                <div>Submenu Direction</div>
+                <dx-select-box
+                    [items]="['auto', 'rightOrBottom', 'leftOrTop']"
+                    [(value)]="menu.submenuDirection"
+                ></dx-select-box>
+            </div>
+            <div class="option">
+                <dx-check-box
+                    text="Hide Submenu on Mouse Leave"
+                    [(value)]="menu.hideSubmenuOnMouseLeave"
+                ></dx-check-box>
+            </div>
+        </div>
+    </div>
+<div class="content-area">
+    <router-outlet></router-outlet>
+</div>
