@@ -2,7 +2,7 @@
 
 
   <div class="row">
-    <div #canvasWrapper class="col s12 m12">
+    <div #canvasWrapper class="col-sm-12 col-md-12 ">
       <canvas #canvas></canvas>
     </div>
     <div style="display:none">
@@ -12,54 +12,48 @@
   </div>
   <div class="row">
 
-    <mz-select-container class="col s1 m1">
-      <select mz-select [(ngModel)]="windowsCount" (change)="initWindowArray($event.target.value)" [label]="'Windows'" [placeholder]="'Select count'">
-        <option *ngFor="let i of doors">{{i}}</option>
-      </select>
-    </mz-select-container>
-    <mz-input-container class="col s1 m1">
-
-      <input mz-input [disabled]="!proportialWidth" [(ngModel)]="totalWidth" [label]="'Total Width'" [validate]="false" [dataError]="'Email is invalid'" [dataSuccess]="'Email is valid'"
-        placeholder="Enter Total width" type="number">
-    </mz-input-container>
-    <mz-input-container class="col s1 m1">
-
-      <input mz-input [(ngModel)]="totalHeight" [label]="'Total Height'" [validate]="false" [dataError]="'Email is invalid'" [dataSuccess]="'Email is valid'"
-        placeholder="Enter Total Height" type="number">
-    </mz-input-container>
-    <mz-select-container class="col s2 m2" *ngIf="config">
-      <select mz-select [(ngModel)]="selected.selectedOutsideProfiles" [label]="'Main profile'" [placeholder]="'Select Profile'">
+    <div class="col-sm-1 col-md-1 ">
+      <section class="form-block">
+        <div class="select">
+          <select class="form-control" [(ngModel)]="windowsCount" (change)="initWindowArray($event.target.value)">
+            <option *ngFor="let i of doors">{{i}}</option>
+          </select>
+        </div>
+      </section>
+    </div>
+    <div class="col-sm-2 col-md-2 ">
+      <input class="col-md-12 col-sm-12" [disabled]="!proportialWidth" [(ngModel)]="totalWidth" placeholder="Total width" size="15"
+        type="number">
+    </div>
+    <div class="col-sm-12 col-md-2 ">
+      <input class="col-md-12 col-sm-12" [(ngModel)]="totalHeight" placeholder="Total Height" size="15" type="number">
+    </div>
+    <div class="col-sm-2 col-md-2 select">
+      <select *ngIf="config" [(ngModel)]="selected.selectedOutsideProfiles">
         <option [ngValue]="i" *ngFor="let i of config.outsideProfiles">{{i.title}}</option>
       </select>
-    </mz-select-container>
-    <mz-select-container class="col s2 m2" *ngIf="config">
-      <select mz-select [(ngModel)]="selected.selectedPartitionProfile" [label]="'Partition profile'" [placeholder]="'Select Profile'">
+    </div>
+    <div class="col-sm-2 col-md-2 select">
+      <select *ngIf="config" [(ngModel)]="selected.selectedPartitionProfile">
         <option [ngValue]="i" *ngFor="let i of config.partitionProfile">{{i.title}}</option>
       </select>
-    </mz-select-container>
-    <mz-select-container class="col s2 m2" *ngIf="config">
-      <select mz-select [(ngModel)]="selected.selectedDoorProfile" [label]="'Door profile'" [placeholder]="'Select Profile'">
+    </div>
+    <div class="col-sm-2 col-md-2 select">
+      <select *ngIf="config" [(ngModel)]="selected.selectedDoorProfile">
         <option [ngValue]="i" *ngFor="let i of config.doorProfile">{{i.title}}</option>
       </select>
-    </mz-select-container>
+    </div>
 
   </div>
   <div class="row">
-    <div class="col s8 m8">
+    <div class="col-sm-8 col-md-8">
     </div>
-    <div class="col s2 m2">
-        <mz-switch-container>
-            <input mz-switch
-            [(ngModel)]="proportialWidth"
-            
-              id="switch-id"
-              [off]="'Cus'"
-              [on]="'Prop'"
-              type="checkbox">
-
-          </mz-switch-container>
+    <div class="col-sm-2 col-md-2">
+      <div class="toggle-switch">
+        <input  [(ngModel)]="proportialWidth" id="switch-id" type="checkbox">
+      </div>
     </div>
-    <div class="col s2 m2">
+    <div class="col-sm-2 col-md-2">
       <button mz-button (click)="recountObjects($event)">
         button
       </button>
@@ -68,20 +62,20 @@
   <div class="row">
     <div class="col s12 m12">
       <section *ngIf="canShowDiagram">
-        <table class="striped bordered">
+        <table class="table">
           <tr>
-            <th >Width</th>
+            <th>Width</th>
             <th>Width</th>
           </tr>
-         
-            
-         
+
+
+
           <tr *ngFor="let i of windowsAr">
             <td>
-                <input [disabled]="proportialWidth" class="input-in-table" [(ngModel)]="i.factorialLenght" type="text" />
+              <input [disabled]="proportialWidth" class="input-in-table" [(ngModel)]="i.factorialLenght" type="text" />
             </td>
             <td>
-             
+
             </td>
           </tr>
         </table>

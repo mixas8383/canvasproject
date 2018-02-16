@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import {LdbService} from './services/ldb.service';
+import { Component, OnInit } from '@angular/core';
+import { LdbService } from './services/ldb.service';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,17 @@ import {LdbService} from './services/ldb.service';
 export class AppComponent {
   title = 'app';
   constructor(
-    private ldbService: LdbService
+    private ldbService: LdbService, public translate: TranslateService
   ) { }
+  ngOnInit() {
+    this.translate.addLangs(["en", "ru"]);
+    this.translate.setDefaultLang('ru');
+
+    let browserLang = this.translate.getBrowserLang();
+    if (browserLang.match(/en|ru/)) {
+      this.translate.use(browserLang);
+    } else {
+      this.translate.use('ru');
+    }
+  }
 }
