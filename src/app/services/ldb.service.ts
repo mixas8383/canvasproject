@@ -19,10 +19,10 @@ export class LdbService {
           id: 1,
           title: 'First partition title',
           length: 6500,
-          width: 50,
+          width: 40,
           windowPaddingTop: 5,
           windowPaddingSide: 5
-
+ 
         }],
         doorProfile: [{
           id: 1,
