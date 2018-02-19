@@ -69,12 +69,14 @@ export class PlasticItemComponent implements AfterViewInit {
       this.config = data;
     });
 
+    this.initApp();
+
   }
 
 
   ngAfterViewInit() {
 
-    this.initApp();
+    
 
   }
   public initApp() {
@@ -110,11 +112,15 @@ export class PlasticItemComponent implements AfterViewInit {
   }
   public initWindowArray(count: number) {
     this.windowsAr = [new doorOb];
+    this.windowsCount=1;
     if (count > 1) {
+
       for (let i = 1; i < count; i++) {
         this.windowsAr.push(new doorOb);
+        this.windowsCount++;
       }
     }
+
     this.clearCanvas();
     this.pDrowWindow(0, 0);
   }

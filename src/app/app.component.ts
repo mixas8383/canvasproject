@@ -9,6 +9,7 @@ import { TranslateService } from "@ngx-translate/core";
 })
 export class AppComponent {
   title = 'app';
+  showMenu = false;
   constructor(
     private ldbService: LdbService, public translate: TranslateService
   ) { }
